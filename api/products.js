@@ -44,8 +44,8 @@ function requireAdmin(req, res) {
 // Ambil semua produk
 // ============================
 async function getProducts(req, res) {
-    const result = await sql`SELECT * FROM products ORDER BY id ASC`;
-    const products = result.rows.map(row => ({
+    const rows = await sql`SELECT * FROM products ORDER BY id ASC`;
+    const products = rows.map(row => ({
         id:       row.id,
         name:     row.name,
         category: row.category,
@@ -73,7 +73,7 @@ async function createProduct(req, res) {
         VALUES (${name}, ${category}, ${parseInt(price)}, ${desc || ''}, ${image})
         RETURNING id
     `;
-    const newId = result.rows[0].id;
+    const newId = result[0].id;
 
     return jsonSuccess(res, { id: newId, name, category, price: parseInt(price), desc: desc || '', image },
         `Produk "${name}" berhasil ditambahkan!`, 201);
@@ -91,11 +91,10 @@ async function updateProduct(req, res) {
         return jsonError(res, 'Data tidak valid atau field wajib kosong.');
     }
 
-    const result = await sql`
+    await sql`
         UPDATE products SET name=${name}, category=${category}, price=${parseInt(price)},
         description=${desc || ''}, image=${image} WHERE id=${parseInt(id)}
     `;
-    if (result.rowCount === 0) return jsonError(res, 'Produk tidak ditemukan.', 404);
 
     return jsonSuccess(res, { id: parseInt(id) }, `Produk "${name}" berhasil diubah!`);
 }
@@ -111,8 +110,8 @@ async function deleteProduct(req, res) {
     if (!id) return jsonError(res, 'ID produk tidak valid.');
 
     const check = await sql`SELECT name FROM products WHERE id = ${parseInt(id)}`;
-    if (check.rows.length === 0) return jsonError(res, 'Produk tidak ditemukan.', 404);
-    const prodName = check.rows[0].name;
+    if (check.length === 0) return jsonError(res, 'Produk tidak ditemukan.', 404);
+    const prodName = check[0].name;
 
     await sql`DELETE FROM products WHERE id = ${parseInt(id)}`;
     return jsonSuccess(res, {}, `Produk "${prodName}" berhasil dihapus.`);

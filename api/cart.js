@@ -37,8 +37,8 @@ export default async function handler(req, res) {
 // Ambil cart milik user
 // ============================
 async function getCart(req, res, session) {
-    const result = await sql`SELECT items FROM cart WHERE user_id = ${session.id} LIMIT 1`;
-    const items  = result.rows[0] ? result.rows[0].items : [];
+    const rows  = await sql`SELECT items FROM cart WHERE user_id = ${session.id} LIMIT 1`;
+    const items = rows[0] ? rows[0].items : [];
     return jsonSuccess(res, items);
 }
 

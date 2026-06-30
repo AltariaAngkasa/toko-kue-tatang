@@ -79,8 +79,8 @@ async function createOrder(req, res, session) {
 async function listOrders(req, res, session) {
     if (!session) return jsonError(res, 'Silakan login terlebih dahulu.', 401);
 
-    const result = await sql`SELECT * FROM orders WHERE user_id = ${session.id} ORDER BY created_at DESC`;
-    return jsonSuccess(res, await formatOrders(result.rows));
+    const rows = await sql`SELECT * FROM orders WHERE user_id = ${session.id} ORDER BY created_at DESC`;
+    return jsonSuccess(res, await formatOrders(rows));
 }
 
 // ============================
@@ -89,8 +89,8 @@ async function listOrders(req, res, session) {
 async function listAllOrders(req, res, session) {
     if (!session || session.role !== 'admin') return jsonError(res, 'Akses ditolak.', 403);
 
-    const result = await sql`SELECT * FROM orders ORDER BY created_at DESC`;
-    return jsonSuccess(res, await formatOrders(result.rows));
+    const rows = await sql`SELECT * FROM orders ORDER BY created_at DESC`;
+    return jsonSuccess(res, await formatOrders(rows));
 }
 
 // ============================
@@ -102,8 +102,8 @@ async function getOrder(req, res, session) {
     const orderId = req.query.order_id || '';
     if (!orderId) return jsonError(res, 'order_id wajib diisi.');
 
-    const result = await sql`SELECT * FROM orders WHERE order_id = ${orderId} LIMIT 1`;
-    const order  = result.rows[0];
+    const rows  = await sql`SELECT * FROM orders WHERE order_id = ${orderId} LIMIT 1`;
+    const order = rows[0];
     if (!order) return jsonError(res, 'Pesanan tidak ditemukan.', 404);
 
     if (session.role !== 'admin' && order.user_id !== session.id) {
@@ -126,7 +126,7 @@ async function updateStatus(req, res, session) {
     if (!allowed.includes(status)) return jsonError(res, 'Status tidak valid.');
 
     const check = await sql`SELECT * FROM orders WHERE order_id = ${orderId} LIMIT 1`;
-    const order  = check.rows[0];
+    const order  = check[0];
     if (!order) return jsonError(res, 'Pesanan tidak ditemukan.', 404);
 
     if (session.role !== 'admin' && order.user_id !== session.id) {
@@ -149,8 +149,8 @@ async function injectDemoOrders(req, res, session) {
     if (!session) return jsonError(res, 'Silakan login terlebih dahulu.', 401);
     if (req.method !== 'POST') return jsonError(res, 'Method not allowed', 405);
 
-    const count = await sql`SELECT COUNT(*) as cnt FROM orders WHERE user_id = ${session.id}`;
-    if (parseInt(count.rows[0].cnt) > 0) return jsonSuccess(res, [], 'Sudah ada pesanan.');
+    const count = await sql`SELECT COUNT(*)::int as cnt FROM orders WHERE user_id = ${session.id}`;
+    if (count[0].cnt > 0) return jsonSuccess(res, [], 'Sudah ada pesanan.');
 
     const demoOrders = [
         {
@@ -218,10 +218,10 @@ async function formatOrders(orders) {
     if (!orders.length) return [];
 
     const orderIds   = orders.map(o => o.order_id);
-    const itemResult = await sql`SELECT * FROM order_items WHERE order_id = ANY(${orderIds})`;
+    const itemRows = await sql`SELECT * FROM order_items WHERE order_id = ANY(${orderIds})`;
 
     const itemsMap = {};
-    for (const item of itemResult.rows) {
+    for (const item of itemRows) {
         if (!itemsMap[item.order_id]) itemsMap[item.order_id] = [];
         itemsMap[item.order_id].push({
             id:    item.product_id,

@@ -71,8 +71,8 @@ async function handleLogin(req, res) {
     const { email, password } = getBody(req);
     if (!email || !password) return jsonError(res, 'Email dan password wajib diisi.');
 
-    const result = await sql`SELECT * FROM users WHERE email = ${email.toLowerCase().trim()} LIMIT 1`;
-    const user   = result.rows[0];
+    const rows = await sql`SELECT * FROM users WHERE email = ${email.toLowerCase().trim()} LIMIT 1`;
+    const user  = rows[0];
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
         return jsonError(res, 'Email atau password salah. Periksa kembali dan coba lagi.', 401);
@@ -109,7 +109,7 @@ async function handleRegister(req, res) {
 
     // Cek email sudah terdaftar
     const existing = await sql`SELECT id FROM users WHERE email = ${cleanEmail} LIMIT 1`;
-    if (existing.rows.length > 0) return jsonError(res, 'Email sudah terdaftar. Silakan login!');
+    if (existing.length > 0) return jsonError(res, 'Email sudah terdaftar. Silakan login!');
 
     const hashed = bcrypt.hashSync(password, 10);
     const insert = await sql`
@@ -117,7 +117,7 @@ async function handleRegister(req, res) {
         VALUES (${name.trim()}, ${cleanEmail}, ${hashed}, ${phone || ''}, '', '', '', 'user')
         RETURNING id
     `;
-    const newId = insert.rows[0].id;
+    const newId = insert[0].id;
 
     const sessionData = {
         id:      newId,
