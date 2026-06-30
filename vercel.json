@@ -1,1 +1,1 @@
-{"rewrites":[{"source":"/api/auth","destination":"/api/auth.js"},{"source":"/api/products","destination":"/api/products.js"},{"source":"/api/orders","destination":"/api/orders.js"},{"source":"/api/cart","destination":"/api/cart.js"}]}
+{"rewrites":[{"source":"/api/auth.php","destination":"/api/auth"},{"source":"/api/products.php","destination":"/api/products"},{"source":"/api/orders.php","destination":"/api/orders"},{"source":"/api/cart.php","destination":"/api/cart"}]}
