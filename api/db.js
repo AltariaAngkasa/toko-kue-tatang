@@ -1,7 +1,9 @@
 // ==========================================
 // api/db.js — Koneksi Vercel Postgres
 // ==========================================
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
 
 export { sql };
 
@@ -92,37 +94,43 @@ export async function initDB() {
     `;
 
     // Seed admin & user dummy jika tabel users kosong
-    const userCount = await sql`SELECT COUNT(*) as cnt FROM users`;
-    if (parseInt(userCount.rows[0].cnt) === 0) {
-        // Import bcrypt untuk hashing — di sini pakai hash pre-generated
-        // kue1234  => hash di bawah
-        // admin123 => hash di bawah
+    const userCount = await sql`SELECT COUNT(*)::int as cnt FROM users`;
+    if (userCount[0].cnt === 0) {
         const hashUser  = '$2a$10$k7RYZMH6VwIUcjRWVHZuyeJRyuLVzHh4oPqJYD80g60/ulKSX/YfK';
         const hashAdmin = '$2a$10$CKW6D3JKS1qJvJQo2CKJ5.hMekQ.VbAFftIKipbQdKVQdxx/9Vvi.';
-        await sql`
-            INSERT INTO users (name, email, password, phone, address, city, postal, role) VALUES
-            ('Budi Santoso',  'budi@email.com',  ${hashUser},  '081234567890', 'Jl. Melati No. 12, Kebayoran Baru, Jakarta Selatan', 'Jakarta',    '12160', 'user'),
-            ('Siti Rahayu',   'siti@email.com',  ${hashUser},  '082345678901', 'Jl. Kenanga No. 5, Dago, Bandung',                  'Bandung',    '40135', 'user'),
-            ('Andi Wijaya',   'andi@email.com',  ${hashUser},  '083456789012', 'Jl. Veteran No. 45, Genteng, Surabaya',             'Surabaya',   '60271', 'user'),
-            ('Dewi Lestari',  'dewi@email.com',  ${hashUser},  '084567890123', 'Jl. Malioboro No. 88, Gedongtengen, Yogyakarta',   'Yogyakarta', '55271', 'user'),
-            ('Rizky Pratama', 'rizky@email.com', ${hashUser},  '085678901234', 'Jl. Sudirman No. 100, Medan Baru, Medan',          'Medan',      '20154', 'user'),
-            ('Admin Tatang',  'admin@email.com', ${hashAdmin}, '08999999999',  'Toko Kue Tatang',                                  'Jakarta',    '12000', 'admin')
-            ON CONFLICT (email) DO NOTHING
-        `;
+        const dummyUsers = [
+            { name:'Budi Santoso',  email:'budi@email.com',  hash:hashUser,  phone:'081234567890', address:'Jl. Melati No. 12, Kebayoran Baru, Jakarta Selatan', city:'Jakarta',    postal:'12160', role:'user' },
+            { name:'Siti Rahayu',   email:'siti@email.com',  hash:hashUser,  phone:'082345678901', address:'Jl. Kenanga No. 5, Dago, Bandung',                  city:'Bandung',    postal:'40135', role:'user' },
+            { name:'Andi Wijaya',   email:'andi@email.com',  hash:hashUser,  phone:'083456789012', address:'Jl. Veteran No. 45, Genteng, Surabaya',             city:'Surabaya',   postal:'60271', role:'user' },
+            { name:'Dewi Lestari',  email:'dewi@email.com',  hash:hashUser,  phone:'084567890123', address:'Jl. Malioboro No. 88, Gedongtengen, Yogyakarta',    city:'Yogyakarta', postal:'55271', role:'user' },
+            { name:'Rizky Pratama', email:'rizky@email.com', hash:hashUser,  phone:'085678901234', address:'Jl. Sudirman No. 100, Medan Baru, Medan',           city:'Medan',      postal:'20154', role:'user' },
+            { name:'Admin Tatang',  email:'admin@email.com', hash:hashAdmin, phone:'08999999999',  address:'Toko Kue Tatang',                                   city:'Jakarta',    postal:'12000', role:'admin' },
+        ];
+        for (const u of dummyUsers) {
+            await sql`
+                INSERT INTO users (name, email, password, phone, address, city, postal, role)
+                VALUES (${u.name}, ${u.email}, ${u.hash}, ${u.phone}, ${u.address}, ${u.city}, ${u.postal}, ${u.role})
+                ON CONFLICT (email) DO NOTHING
+            `;
+        }
     }
 
     // Seed default products jika kosong
-    const prodCount = await sql`SELECT COUNT(*) as cnt FROM products`;
-    if (parseInt(prodCount.rows[0].cnt) === 0) {
-        await sql`
-            INSERT INTO products (id, name, category, price, description, image) VALUES
-            (1, 'Kue Lapis Legit Premium', 'Kue Basah',       75000,  'Lapis legit beraroma mentega pilihan premium dengan rempah khas yang harum.',                                'https://i.pinimg.com/1200x/d4/f3/c7/d4f3c7eaad1620801712318684b6b534.jpg'),
-            (2, 'Nastar Keju',             'Kue Kering',       65000,  'Kue nastar renyah lembut dengan isian selai nanas manis madu dan taburan keju gurih.',                      'https://i.pinimg.com/736x/88/da/c3/88dac3899943f02c51fe6c95ce664b2f.jpg'),
-            (3, 'Croissant Cokelat Pastry','Roti & Pastry',    18000,  'Pastry ala Perancis yang berlapis renyah di luar, bertekstur lembut di dalam.',                            'https://i.pinimg.com/webp87/1200x/34/a0/59/34a059a12664dcae118986a011cd897c.webp'),
-            (4, 'Kue Black Forest Klasik', 'Kue Ulang Tahun', 185000,  'Kue spons cokelat kaya rasa berbalut krim segar dan topping parutan dark chocolate murni.',               'https://i.pinimg.com/736x/fd/2f/d4/fd2fd4ce9503a7dd5e8e9209d1806911.jpg'),
-            (5, 'Pie Buah',                'Kue Basah',         20000,  'Pie buah dengan topping buah-buahan segar dan manis.',                                                     'https://i.pinimg.com/736x/99/b8/1b/99b81b035b196ddcc8ae4f8e6f15e1b0.jpg'),
-            (6, 'Brownies Panggang Almond','Roti & Pastry',     45000,  'Brownies panggang dengan tekstur fudgy cokelat pekat dipadu renyahnya potongan kacang almond.',           'https://i.pinimg.com/1200x/7c/56/12/7c5612a139e38c2b09a8b0622d051749.jpg')
-            ON CONFLICT (id) DO NOTHING
-        `;
+    const prodCount = await sql`SELECT COUNT(*)::int as cnt FROM products`;
+    if (prodCount[0].cnt === 0) {
+        const defaultProducts = [
+            { name:'Kue Lapis Legit Premium', category:'Kue Basah',       price:75000,  desc:'Lapis legit beraroma mentega pilihan premium dengan rempah khas yang harum.',                          image:'https://i.pinimg.com/1200x/d4/f3/c7/d4f3c7eaad1620801712318684b6b534.jpg' },
+            { name:'Nastar Keju',             category:'Kue Kering',       price:65000,  desc:'Kue nastar renyah lembut dengan isian selai nanas manis madu dan taburan keju gurih.',                image:'https://i.pinimg.com/736x/88/da/c3/88dac3899943f02c51fe6c95ce664b2f.jpg' },
+            { name:'Croissant Cokelat Pastry',category:'Roti & Pastry',    price:18000,  desc:'Pastry ala Perancis yang berlapis renyah di luar, bertekstur lembut di dalam.',                      image:'https://i.pinimg.com/webp87/1200x/34/a0/59/34a059a12664dcae118986a011cd897c.webp' },
+            { name:'Kue Black Forest Klasik', category:'Kue Ulang Tahun', price:185000, desc:'Kue spons cokelat kaya rasa berbalut krim segar dan topping parutan dark chocolate murni.',           image:'https://i.pinimg.com/736x/fd/2f/d4/fd2fd4ce9503a7dd5e8e9209d1806911.jpg' },
+            { name:'Pie Buah',                category:'Kue Basah',         price:20000,  desc:'Pie buah dengan topping buah-buahan segar dan manis.',                                                image:'https://i.pinimg.com/736x/99/b8/1b/99b81b035b196ddcc8ae4f8e6f15e1b0.jpg' },
+            { name:'Brownies Panggang Almond',category:'Roti & Pastry',     price:45000,  desc:'Brownies panggang dengan tekstur fudgy cokelat pekat dipadu renyahnya potongan kacang almond.',      image:'https://i.pinimg.com/1200x/7c/56/12/7c5612a139e38c2b09a8b0622d051749.jpg' },
+        ];
+        for (const p of defaultProducts) {
+            await sql`
+                INSERT INTO products (name, category, price, description, image)
+                VALUES (${p.name}, ${p.category}, ${p.price}, ${p.desc}, ${p.image})
+            `;
+        }
     }
 }
