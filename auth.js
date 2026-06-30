@@ -2,7 +2,10 @@
 // auth.js — Sistem Autentikasi via PHP API
 // ==========================================
 
-const API_BASE = 'api';
+// Deteksi environment: Vercel pakai /api, lokal PHP pakai api/
+const API_BASE = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('laragon')
+    ? 'api'
+    : '/api';
 
 // ============================
 // Cek session dari server
