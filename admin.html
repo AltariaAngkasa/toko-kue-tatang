@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin — Toko Kue Tatang</title>
+    <meta name="description" content="Dashboard manajemen produk dan pesanan pembeli Toko Kue Tatang.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="page-body">
+
+    <!-- Header / Navbar Admin -->
+    <header>
+        <div class="navbar container">
+            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+                <i class="fa-solid fa-cake-candles"></i>
+                <h1>Toko Kue Tatang <span class="badge-admin">Admin</span></h1>
+            </a>
+            <div style="display:flex; gap:16px; align-items:center;">
+                <a href="index.html" class="nav-link-btn"><i class="fa-solid fa-shop"></i> Lihat Toko</a>
+                <div class="user-nav-area" id="user-nav-area"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="admin-main container">
+        
+        <!-- Welcome Banner -->
+        <div class="admin-welcome">
+            <div class="welcome-text">
+                <h2>Selamat Datang, Admin! 👋</h2>
+                <p>Kelola pesanan pelanggan dan katalog kue Anda di sini secara realtime.</p>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats Cards -->
+        <div class="admin-stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon orders"><i class="fa-solid fa-receipt"></i></div>
+                <div class="stat-info">
+                    <span class="stat-label">Total Pesanan</span>
+                    <strong class="stat-value" id="stat-total-orders">0</strong>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon revenue"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <div class="stat-info">
+                    <span class="stat-label">Total Pendapatan</span>
+                    <strong class="stat-value" id="stat-total-revenue">Rp 0</strong>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon products"><i class="fa-solid fa-cake-candles"></i></div>
+                <div class="stat-info">
+                    <span class="stat-label">Jumlah Produk</span>
+                    <strong class="stat-value" id="stat-total-products">0</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Navigation Tabs -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" id="tab-btn-orders" onclick="switchAdminTab('orders')">
+                <i class="fa-solid fa-receipt"></i> Pesanan Pelanggan
+            </button>
+            <button class="admin-tab" id="tab-btn-products" onclick="switchAdminTab('products')">
+                <i class="fa-solid fa-boxes-stacked"></i> Kelola Katalog Produk
+            </button>
+        </div>
+
+        <!-- === SECTION: PESANAN MASUK === -->
+        <section class="admin-section" id="admin-sec-orders">
+            <div class="section-header">
+                <h3><i class="fa-solid fa-list-check"></i> Daftar Pesanan Masuk</h3>
+                
+                <!-- Filter Status Pesanan -->
+                <div class="order-status-filters">
+                    <button class="filter-btn active" onclick="filterAdminOrders('semua', this)">Semua</button>
+                    <button class="filter-btn" onclick="filterAdminOrders('Menunggu Pembayaran', this)">Belum Bayar</button>
+                    <button class="filter-btn" onclick="filterAdminOrders('Dikirim', this)">Dalam Pengiriman</button>
+                    <button class="filter-btn" onclick="filterAdminOrders('Selesai', this)">Selesai</button>
+                    <button class="filter-btn" onclick="filterAdminOrders('Dibatalkan', this)">Dibatalkan</button>
+                </div>
+            </div>
+
+            <!-- Orders Table Container -->
+            <div class="table-responsive">
+                <table class="admin-table" id="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID & Tanggal</th>
+                            <th>Pelanggan</th>
+                            <th>Detail Kue & Catatan</th>
+                            <th>Total Tagihan</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-orders-list">
+                        <!-- Diisi via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State orders -->
+            <div class="admin-empty hidden" id="empty-orders">
+                <i class="fa-solid fa-box-open empty-icon"></i>
+                <h4>Tidak Ada Pesanan</h4>
+                <p>Belum ada pesanan masuk untuk status filter ini.</p>
+            </div>
+        </section>
+
+        <!-- === SECTION: MANAJEMEN PRODUK === -->
+        <section class="admin-section hidden" id="admin-sec-products">
+            <div class="section-header product-sec-header">
+                <h3><i class="fa-solid fa-boxes-stacked"></i> Katalog Produk Aktif</h3>
+                <button class="btn-add-product" onclick="openProductModal()">
+                    <i class="fa-solid fa-plus"></i> Tambah Produk Baru
+                </button>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="admin-products-grid" id="admin-products-list">
+                <!-- Diisi via JavaScript -->
+            </div>
+
+            <!-- Empty State products -->
+            <div class="admin-empty hidden" id="empty-products">
+                <i class="fa-solid fa-cake-candles empty-icon"></i>
+                <h4>Katalog Kue Kosong</h4>
+                <p>Silakan klik tombol "Tambah Produk Baru" untuk menambahkan kue.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Form Tambah/Edit Produk -->
+    <div class="admin-modal" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Tambah Produk Baru</h3>
+                <span class="modal-close" onclick="closeProductModal()">&times;</span>
+            </div>
+            <form id="product-form" onsubmit="handleProductSubmit(event)">
+                <input type="hidden" id="prod-id">
+                
+                <div class="form-group">
+                    <label for="prod-name">Nama Kue</label>
+                    <input type="text" id="prod-name" placeholder="Contoh: Nastar Nanas Madu" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-category">Kategori Kue</label>
+                    <select id="prod-category" required>
+                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                        <option value="Kue Basah">Kue Basah</option>
+                        <option value="Kue Kering">Kue Kering</option>
+                        <option value="Roti & Pastry">Roti & Pastry</option>
+                        <option value="Kue Ulang Tahun">Kue Ulang Tahun</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-price">Harga Kue (Rp)</label>
+                    <input type="number" id="prod-price" placeholder="Contoh: 45000" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-desc">Deskripsi Kue</label>
+                    <textarea id="prod-desc" rows="3" placeholder="Jelaskan keunikan rasa kue di sini..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-image">URL Gambar Kue</label>
+                    <input type="url" id="prod-image" placeholder="Contoh: https://images.unsplash.com/... atau gambar lokal" required>
+                    <small style="color: #888; font-size: 0.75rem; margin-top: 4px; display: block;">
+                        Gunakan URL gambar dari internet atau link file gambar Anda.
+                    </small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel-modal" onclick="closeProductModal()">Batal</button>
+                    <button type="submit" class="btn-save-modal">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Toko Kue Tatang. Admin Panel. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

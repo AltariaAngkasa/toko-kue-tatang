@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran — Toko Kue Tatang</title>
+    <meta name="description" content="Selesaikan pembayaran pesananmu di Toko Kue Tatang.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-body">
+
+    <!-- Header Checkout Steps -->
+    <header class="checkout-header">
+        <div class="container navbar">
+            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+                <i class="fa-solid fa-cake-candles"></i>
+                <h1>Toko Kue Tatang</h1>
+            </a>
+            <div class="checkout-steps">
+                <div class="step done"><span><i class="fa-solid fa-check"></i></span> Keranjang</div>
+                <div class="step-line active"></div>
+                <div class="step done"><span><i class="fa-solid fa-check"></i></span> Checkout</div>
+                <div class="step-line active"></div>
+                <div class="step active"><span>3</span> Pembayaran</div>
+            </div>
+            <div style="width:160px;"></div>
+        </div>
+    </header>
+
+    <main class="payment-main container">
+
+        <!-- Banner Status Pesanan -->
+        <div class="payment-status-banner" id="payment-status-banner">
+            <div class="status-icon-wrap">
+                <i class="fa-solid fa-clock-rotate-left" id="status-icon"></i>
+            </div>
+            <div class="status-text-wrap">
+                <span class="status-label" id="status-label">MENUNGGU PEMBAYARAN</span>
+                <h2 class="order-id-title" id="order-id-title">ID <span id="order-id-display">—</span> belum dibayar</h2>
+            </div>
+            <div class="status-countdown" id="status-countdown">
+                <i class="fa-regular fa-clock"></i>
+                <span id="countdown-timer">02:00:00</span>
+                <span class="countdown-label">Batas Pembayaran</span>
+            </div>
+        </div>
+
+        <div class="payment-layout">
+
+            <!-- KIRI: Metode & Instruksi Bayar -->
+            <div class="payment-left">
+
+                <!-- Pilih Metode Bayar -->
+                <div class="payment-card">
+                    <h3 class="payment-card-title"><i class="fa-solid fa-credit-card"></i> Pilih Metode Pembayaran</h3>
+                    <div class="payment-methods">
+
+                        <label class="method-option" id="method-va">
+                            <input type="radio" name="payment-method" value="va" checked onchange="showPaymentMethod('va')">
+                            <div class="method-icon va"><i class="fa-solid fa-building-columns"></i></div>
+                            <div class="method-label">
+                                <strong>Virtual Account</strong>
+                                <span>Transfer melalui ATM atau m-Banking</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right method-arrow"></i>
+                        </label>
+
+                        <label class="method-option" id="method-rek">
+                            <input type="radio" name="payment-method" value="rek" onchange="showPaymentMethod('rek')">
+                            <div class="method-icon rek"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                            <div class="method-label">
+                                <strong>Transfer Bank</strong>
+                                <span>Transfer langsung ke rekening toko</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right method-arrow"></i>
+                        </label>
+
+                        <label class="method-option" id="method-qris">
+                            <input type="radio" name="payment-method" value="qris" onchange="showPaymentMethod('qris')">
+                            <div class="method-icon qris"><i class="fa-solid fa-qrcode"></i></div>
+                            <div class="method-label">
+                                <strong>QRIS</strong>
+                                <span>Scan QR dengan aplikasi apapun</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right method-arrow"></i>
+                        </label>
+
+                    </div>
+                </div>
+
+                <!-- Instruksi VA -->
+                <div class="payment-instruction-card" id="instruction-va">
+                    <h3 class="instr-title">
+                        <span class="instr-badge va-badge"><i class="fa-solid fa-building-columns"></i> Virtual Account</span>
+                        Cara Pembayaran Via VA
+                    </h3>
+                    <div class="va-select-wrap">
+                        <label>Pilih Bank</label>
+                        <div class="bank-options">
+                            <button class="bank-btn active" onclick="selectBank('BCA', this)">BCA</button>
+                            <button class="bank-btn" onclick="selectBank('Mandiri', this)">Mandiri</button>
+                            <button class="bank-btn" onclick="selectBank('BNI', this)">BNI</button>
+                            <button class="bank-btn" onclick="selectBank('BRI', this)">BRI</button>
+                        </div>
+                    </div>
+                    <div class="account-box">
+                        <div class="account-row">
+                            <span class="account-label">Bank</span>
+                            <span class="account-value" id="va-bank-name">BCA</span>
+                        </div>
+                        <div class="account-row">
+                            <span class="account-label">Nomor Virtual Account</span>
+                            <div class="account-copy-row">
+                                <span class="account-value mono" id="va-number">7004 5812 3901 2345</span>
+                                <button class="btn-copy" onclick="copyText('va-number')"><i class="fa-regular fa-copy"></i> Salin</button>
+                            </div>
+                        </div>
+                        <div class="account-row">
+                            <span class="account-label">Atas Nama</span>
+                            <span class="account-value">TOKO KUE TATANG</span>
+                        </div>
+                        <div class="account-row">
+                            <span class="account-label">Total Bayar</span>
+                            <span class="account-value total-highlight" id="va-total-display">—</span>
+                        </div>
+                    </div>
+                    <div class="instr-steps">
+                        <p><strong>Langkah Pembayaran:</strong></p>
+                        <ol>
+                            <li>Buka aplikasi <strong>m-Banking</strong> atau pergi ke <strong>ATM</strong> bank yang dipilih.</li>
+                            <li>Pilih menu <strong>Transfer</strong> atau <strong>Pembayaran Virtual Account</strong>.</li>
+                            <li>Masukkan nomor VA di atas dengan tepat.</li>
+                            <li>Cek detail tagihan, pastikan nama & nominal benar.</li>
+                            <li>Konfirmasi pembayaran lalu klik <strong>"Sudah Bayar"</strong> di bawah.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Instruksi Rekening -->
+                <div class="payment-instruction-card hidden" id="instruction-rek">
+                    <h3 class="instr-title">
+                        <span class="instr-badge rek-badge"><i class="fa-solid fa-money-bill-transfer"></i> Transfer Bank</span>
+                        Transfer Langsung ke Rekening
+                    </h3>
+                    <div class="account-box">
+                        <div class="account-row">
+                            <span class="account-label">Bank</span>
+                            <span class="account-value">Bank Mandiri</span>
+                        </div>
+                        <div class="account-row">
+                            <span class="account-label">Nomor Rekening</span>
+                            <div class="account-copy-row">
+                                <span class="account-value mono" id="rek-number">155-000-7654-321</span>
+                                <button class="btn-copy" onclick="copyText('rek-number')"><i class="fa-regular fa-copy"></i> Salin</button>
+                            </div>
+                        </div>
+                        <div class="account-row">
+                            <span class="account-label">Atas Nama</span>
+                            <span class="account-value">TATANG BAKERY INDO</span>
+                        </div>
+                        <div class="account-row">
+                            <span class="account-label">Total Bayar</span>
+                            <span class="account-value total-highlight" id="rek-total-display">—</span>
+                        </div>
+                    </div>
+                    <div class="instr-steps">
+                        <p><strong>Langkah Pembayaran:</strong></p>
+                        <ol>
+                            <li>Transfer ke nomor rekening di atas sesuai dengan total tagihan (nominal <strong>harus tepat</strong>).</li>
+                            <li>Simpan bukti transfer (screenshot / struk ATM).</li>
+                            <li>Klik tombol <strong>"Sudah Bayar"</strong> di bawah untuk konfirmasi.</li>
+                            <li>Pembayaran akan diverifikasi dalam 1x24 jam kerja.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Instruksi QRIS -->
+                <div class="payment-instruction-card hidden" id="instruction-qris">
+                    <h3 class="instr-title">
+                        <span class="instr-badge qris-badge"><i class="fa-solid fa-qrcode"></i> QRIS</span>
+                        Scan QR Code Pembayaran
+                    </h3>
+                    <div class="qris-wrap">
+                        <div class="qris-box">
+                            <img src="qris.png" alt="QRIS Toko Kue Tatang" class="qris-img">
+                            <p class="qris-merchant-name">TOKO KUE TATANG</p>
+                            <p class="qris-merchant-id">NMID: ID2026070112345678</p>
+                        </div>
+                        <div class="qris-total-box">
+                            <span>Total Bayar:</span>
+                            <strong id="qris-total-display">—</strong>
+                        </div>
+                    </div>
+                    <div class="instr-steps">
+                        <p><strong>Langkah Pembayaran:</strong></p>
+                        <ol>
+                            <li>Buka aplikasi dompet digital (GoPay, OVO, Dana, ShopeePay, dll) atau m-Banking.</li>
+                            <li>Pilih menu <strong>Scan / Pay</strong> lalu arahkan kamera ke QR Code di atas.</li>
+                            <li>Cek nama merchant <strong>"TOKO KUE TATANG"</strong> dan masukkan nominal <strong id="qris-amount-text">—</strong>.</li>
+                            <li>Selesaikan pembayaran lalu klik <strong>"Sudah Bayar"</strong> di bawah.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="payment-actions" id="payment-actions">
+                    <button class="btn-paid" id="btn-paid" onclick="confirmPayment()">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Sudah Bayar
+                    </button>
+                    <button class="btn-cancel" id="btn-cancel" onclick="cancelOrder()">
+                        <i class="fa-solid fa-xmark"></i>
+                        Batalkan Pesanan
+                    </button>
+                </div>
+
+                <!-- Paid Confirmation Banner (tersembunyi) -->
+                <div class="paid-banner hidden" id="paid-banner">
+                    <div class="paid-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="paid-text">
+                        <h3>Pembayaran Dikonfirmasi!</h3>
+                        <p>Terima kasih! Pesanan Anda sedang kami proses. Cek status pesanan di halaman Riwayat.</p>
+                    </div>
+                    <a href="history.html" class="btn-go-history">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Lihat Riwayat
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- KANAN: Ringkasan Pesanan -->
+            <div class="payment-right">
+                <div class="summary-card sticky-summary">
+                    <h3 class="summary-title"><i class="fa-solid fa-receipt"></i> Ringkasan Pesanan</h3>
+
+                    <div id="payment-order-summary"></div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-rows">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="pay-subtotal">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Ongkir (<span id="pay-courier">—</span>)</span>
+                            <span id="pay-shipping">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Biaya Layanan</span>
+                            <span>Rp 2.000</span>
+                        </div>
+                        <div class="summary-row discount-row" id="pay-discount-row" style="display:none;">
+                            <span>Diskon Promo</span>
+                            <span id="pay-discount" style="color:#27ae60;"></span>
+                        </div>
+                    </div>
+
+                    <div class="summary-divider"></div>
+                    <div class="summary-total-row">
+                        <span>Total Dibayar</span>
+                        <span id="pay-total" class="total-big">—</span>
+                    </div>
+
+                    <!-- Info Ekspedisi -->
+                    <div class="delivery-info-box">
+                        <i class="fa-solid fa-truck"></i>
+                        <div>
+                            <p id="pay-delivery-name">—</p>
+                            <span id="pay-delivery-eta">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Tujuan -->
+                    <div class="delivery-addr-box">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>
+                            <p id="pay-delivery-address">—</p>
+                        </div>
+                    </div>
+
+                    <a href="index.html" class="btn-back-shop">
+                        <i class="fa-solid fa-shop"></i> Lanjut Belanja
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="payment.js"></script>
+</body>
+</html>

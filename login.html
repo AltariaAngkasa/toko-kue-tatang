@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Daftar — Toko Kue Tatang</title>
+    <meta name="description" content="Masuk atau daftar akun untuk mulai memesan kue lezat dari Toko Kue Tatang.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-body">
+
+    <!-- Dekoratif Background Blobs -->
+    <div class="auth-blob blob-1"></div>
+    <div class="auth-blob blob-2"></div>
+
+    <div class="auth-wrapper">
+        <!-- Brand Section -->
+        <div class="auth-brand">
+            <a href="index.html" class="auth-logo">
+                <i class="fa-solid fa-cake-candles"></i>
+                <span>Toko Kue Tatang</span>
+            </a>
+            <p class="auth-tagline">Masuk untuk menikmati kemudahan belanja kue lezat!</p>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+
+            <!-- Tab Switcher -->
+            <!-- <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">
+                    <i class="fa-solid fa-right-to-bracket"></i> Masuk
+                </button>
+                <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">
+                    <i class="fa-solid fa-user-plus"></i> Daftar
+                </button>
+            </div> -->
+
+            <!-- Alert Container -->
+            <div class="auth-alert" id="auth-alert" style="display:none;"></div>
+
+            <!-- === FORM LOGIN === -->
+            <form class="auth-form" id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">
+                        <i class="fa-solid fa-envelope"></i> Email
+                    </label>
+                    <input type="email" id="login-email" placeholder="contoh@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">
+                        <i class="fa-solid fa-lock"></i> Password
+                    </label>
+                    <div class="input-password-wrap">
+                        <input type="password" id="login-password" placeholder="Masukkan password" required
+                            autocomplete="current-password">
+                        <i class="fa-solid fa-eye toggle-pw" onclick="togglePassword('login-password', this)"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth" id="btn-login">
+                    <span>Masuk Sekarang</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <p class="auth-switch-text">
+                    Belum punya akun? <a href="#" onclick="switchTab('signup')">Daftar di sini</a>
+                </p>
+            </form>
+
+            <!-- === FORM SIGNUP === -->
+            <form class="auth-form hidden" id="form-signup" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signup-name">
+                        <i class="fa-solid fa-user"></i> Nama Lengkap
+                    </label>
+                    <input type="text" id="signup-name" placeholder="Masukkan nama lengkap" required
+                        autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">
+                        <i class="fa-solid fa-envelope"></i> Email
+                    </label>
+                    <input type="email" id="signup-email" placeholder="contoh@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">
+                        <i class="fa-solid fa-phone"></i> No. HP
+                    </label>
+                    <input type="tel" id="signup-phone" placeholder="08xxxxxxxxxx" required autocomplete="tel">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">
+                        <i class="fa-solid fa-lock"></i> Password
+                    </label>
+                    <div class="input-password-wrap">
+                        <input type="password" id="signup-password" placeholder="Minimal 6 karakter" required
+                            autocomplete="new-password">
+                        <i class="fa-solid fa-eye toggle-pw" onclick="togglePassword('signup-password', this)"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth" id="btn-signup">
+                    <span>Buat Akun</span>
+                    <i class="fa-solid fa-user-plus"></i>
+                </button>
+                <p class="auth-switch-text">
+                    Sudah punya akun? <a href="#" onclick="switchTab('login')">Masuk di sini</a>
+                </p>
+            </form>
+
+            <!-- Akun Demo Hint -->
+            <!-- <div class="demo-accounts">
+                <p><i class="fa-solid fa-circle-info"></i> <strong>Akun Demo & Admin:</strong></p>
+                <div class="demo-list">
+                    <span onclick="fillDemo('admin@email.com','admin123')">admin@email.com / admin123 (Admin)</span>
+                    <span onclick="fillDemo('budi@email.com','kue1234')">budi@email.com / kue1234 (Pembeli)</span>
+                </div>
+                <p class="demo-note">Klik salah satu akun untuk mengisi otomatis</p>
+            </div> -->
+        </div>
+
+        <a href="index.html" class="back-to-home">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Toko
+        </a>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

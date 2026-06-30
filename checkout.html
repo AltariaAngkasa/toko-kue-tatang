@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — Toko Kue Tatang</title>
+    <meta name="description" content="Konfirmasi pesanan, alamat pengiriman, dan total pembayaran sebelum checkout.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-body">
+
+    <!-- Header Checkout -->
+    <header class="checkout-header">
+        <div class="container navbar">
+            <a href="index.html" class="logo" style="text-decoration:none; color:inherit;">
+                <i class="fa-solid fa-cake-candles"></i>
+                <h1>Toko Kue Tatang</h1>
+            </a>
+            <div class="checkout-steps">
+                <div class="step active"><span>1</span> Keranjang</div>
+                <div class="step-line active"></div>
+                <div class="step active"><span>2</span> Checkout</div>
+                <div class="step-line"></div>
+                <div class="step"><span>3</span> Pembayaran</div>
+            </div>
+            <div style="width:160px;"></div>
+        </div>
+    </header>
+
+    <main class="checkout-main container">
+        <h2 class="page-title"><i class="fa-solid fa-clipboard-list"></i> Detail Pesanan</h2>
+
+        <div class="checkout-layout">
+
+            <!-- KIRI: Detail Pesanan -->
+            <div class="checkout-left">
+
+                <!-- Alamat Pengiriman -->
+                <div class="checkout-card" id="address-card">
+                    <div class="card-header-row">
+                        <div class="card-title">
+                            <i class="fa-solid fa-location-dot" style="color:#E67E22;"></i>
+                            <h3>Alamat Pengiriman</h3>
+                        </div>
+                        <button class="btn-change-address" id="btn-change-address" onclick="toggleAddressForm()">
+                            <i class="fa-solid fa-pen"></i> Ubah
+                        </button>
+                    </div>
+                    <div class="address-display" id="address-display">
+                        <div class="address-name-row">
+                            <span class="address-name" id="disp-name">—</span>
+                            <span class="address-phone" id="disp-phone">—</span>
+                        </div>
+                        <p class="address-full" id="disp-address">Silakan pilih atau isi alamat pengiriman</p>
+                        <span class="address-label default">Utama</span>
+                    </div>
+
+                    <!-- Form Ubah Alamat -->
+                    <div class="address-form hidden" id="address-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Penerima</label>
+                                <input type="text" id="addr-name" placeholder="Nama lengkap penerima">
+                            </div>
+                            <div class="form-group">
+                                <label>No. HP</label>
+                                <input type="tel" id="addr-phone" placeholder="08xxxxxxxxxx">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat Lengkap</label>
+                            <textarea id="addr-full" rows="3" placeholder="Jl. nama jalan, nomor, RT/RW, Kelurahan..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Kota/Kabupaten</label>
+                                <select id="addr-city" onchange="updateShipping()">
+                                    <option value="">Pilih Kota</option>
+                                    <option value="Jakarta" data-ongkir="15000">Jakarta</option>
+                                    <option value="Bandung" data-ongkir="25000">Bandung</option>
+                                    <option value="Surabaya" data-ongkir="35000">Surabaya</option>
+                                    <option value="Yogyakarta" data-ongkir="30000">Yogyakarta</option>
+                                    <option value="Medan" data-ongkir="50000">Medan</option>
+                                    <option value="Semarang" data-ongkir="28000">Semarang</option>
+                                    <option value="Makassar" data-ongkir="55000">Makassar</option>
+                                    <option value="Bogor" data-ongkir="20000">Bogor</option>
+                                    <option value="Depok" data-ongkir="18000">Depok</option>
+                                    <option value="Tangerang" data-ongkir="17000">Tangerang</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Kode Pos</label>
+                                <input type="text" id="addr-postal" placeholder="12345">
+                            </div>
+                        </div>
+                        <button class="btn-save-address" onclick="saveAddress()">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Alamat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pilih Ekspedisi -->
+                <div class="checkout-card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-truck" style="color:#E67E22;"></i>
+                        <h3>Pilih Ekspedisi</h3>
+                    </div>
+                    <div class="courier-options" id="courier-options">
+                        <label class="courier-option">
+                            <input type="radio" name="courier" value="JNE" data-days="2-3" checked onchange="updateCourier(this)">
+                            <div class="courier-info">
+                                <div class="courier-name"><img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Logo_JNE.png" alt="JNE" style="height:22px;"> JNE REG</div>
+                                <div class="courier-eta"><i class="fa-regular fa-clock"></i> 2-3 hari kerja</div>
+                            </div>
+                            <span class="courier-price" id="price-jne">—</span>
+                        </label>
+                        <label class="courier-option">
+                            <input type="radio" name="courier" value="J&T" data-days="1-2" onchange="updateCourier(this)">
+                            <div class="courier-info">
+                                <div class="courier-name"><i class="fa-solid fa-box" style="color:#E50012;"></i> J&T Express</div>
+                                <div class="courier-eta"><i class="fa-regular fa-clock"></i> 1-2 hari kerja</div>
+                            </div>
+                            <span class="courier-price" id="price-jt">—</span>
+                        </label>
+                        <label class="courier-option">
+                            <input type="radio" name="courier" value="SiCepat" data-days="1" onchange="updateCourier(this)">
+                            <div class="courier-info">
+                                <div class="courier-name"><i class="fa-solid fa-bolt" style="color:#FF6B35;"></i> SiCepat HALU</div>
+                                <div class="courier-eta"><i class="fa-regular fa-clock"></i> 1 hari kerja</div>
+                            </div>
+                            <span class="courier-price" id="price-sicepat">—</span>
+                        </label>
+                    </div>
+                    <p class="courier-note" id="courier-note"><i class="fa-solid fa-circle-info"></i> Pilih kota tujuan terlebih dahulu untuk melihat ongkos kirim</p>
+                </div>
+
+                <!-- Item Pesanan -->
+                <div class="checkout-card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-shopping-bag" style="color:#E67E22;"></i>
+                        <h3>Item Pesanan</h3>
+                    </div>
+                    <div id="checkout-items-list"></div>
+                </div>
+
+                <!-- Catatan Pesanan -->
+                <div class="checkout-card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-note-sticky" style="color:#E67E22;"></i>
+                        <h3>Catatan untuk Penjual</h3>
+                    </div>
+                    <textarea class="order-note" id="order-note" rows="3" placeholder="Contoh: Tolong kirim dengan kemasan extra bubble wrap..."></textarea>
+                </div>
+
+            </div>
+
+            <!-- KANAN: Ringkasan Bayar -->
+            <div class="checkout-right">
+                <div class="summary-card sticky-summary">
+                    <h3 class="summary-title"><i class="fa-solid fa-receipt"></i> Ringkasan Pembayaran</h3>
+
+                    <div class="summary-rows">
+                        <div class="summary-row">
+                            <span>Subtotal Produk</span>
+                            <span id="summary-subtotal">Rp 0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Ongkos Kirim</span>
+                            <span id="summary-shipping">—</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Biaya Layanan</span>
+                            <span>Rp 2.000</span>
+                        </div>
+                        <div class="summary-row discount-row" id="discount-row" style="display:none;">
+                            <span>Diskon Ongkir</span>
+                            <span id="summary-discount" style="color:#27ae60;">— Rp 0</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-total-row">
+                        <span>Total Pembayaran</span>
+                        <span id="summary-total" class="total-big">Rp 0</span>
+                    </div>
+
+                    <div class="promo-input-wrap">
+                        <input type="text" id="promo-code" placeholder="Kode Promo (TATANG10)">
+                        <button onclick="applyPromo()" class="btn-promo">Pakai</button>
+                    </div>
+
+                    <button class="btn-bayar" id="btn-bayar" onclick="proceedToPayment()">
+                        <i class="fa-solid fa-shield-check"></i>
+                        Buat Pesanan & Bayar
+                    </button>
+
+                    <div class="guarantee-row">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Transaksi Aman & Terlindungi</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="checkout.js"></script>
+</body>
+</html>

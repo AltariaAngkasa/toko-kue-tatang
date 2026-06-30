@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Kue Tatang - Lezat & Segar Setiap Hari</title>
+    <meta name="description" content="Temukan kelezatan aneka kue basah tradisional, roti lembut, dan kue ulang tahun premium dari Toko Kue Tatang.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="navbar container">
+            <div class="logo">
+                <i class="fa-solid fa-cake-candles"></i>
+                <h1>Toko Kue Tatang</h1>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Cari kue favoritmu...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <div class="navbar-right">
+                <div class="cart-icon" id="cart-toggle">
+                    <i class="fa-solid fa-shopping-basket"></i>
+                    <span id="cart-count">0</span>
+                </div>
+                <!-- User area diisi oleh auth.js -->
+                <div id="user-nav-area"></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content container">
+            <h2>Dibuat dengan Cinta,<br>Dipanggang Setiap Hari</h2>
+            <p>Temukan kelezatan aneka kue basah tradisional, roti lembut, hingga kue ulang tahun premium untuk momen spesial Anda.</p>
+            <a href="#katalog" class="btn-hero">Lihat Menu</a>
+        </div>
+    </section>
+
+    <main class="container" id="katalog">
+        <div class="categories">
+            <button class="cat-btn active" data-category="semua">Semua</button>
+            <button class="cat-btn" data-category="Kue Basah">Kue Basah</button>
+            <button class="cat-btn" data-category="Kue Kering">Kue Kering</button>
+            <button class="cat-btn" data-category="Roti & Pastry">Roti & Pastry</button>
+            <button class="cat-btn" data-category="Kue Ulang Tahun">Kue Ulang Tahun</button>
+        </div>
+
+        <div class="products-grid" id="products-container">
+        </div>
+    </main>
+
+    <section class="extra-menu container">
+        <div class="menu-column">
+            <h4>Menu Utama</h4>
+            <ul>
+                <li><a href="#katalog">Katalog Kue</a></li>
+                <li><a href="#katalog">Kategori Produk</a></li>
+                <li><a href="#" id="menu-cart-link">Keranjang Belanja</a></li>
+                <li><a href="history.html">Riwayat Pesanan</a></li>
+            </ul>
+        </div>
+        <div class="menu-column">
+            <h4>Kategori Populer</h4>
+            <ul>
+                <li><a href="#katalog">Kue Ulang Tahun</a></li>
+                <li><a href="#katalog">Kue Basah Tradisional</a></li>
+                <li><a href="#katalog">Roti & Pastry</a></li>
+                <li><a href="#katalog">Kue Kering Nastar</a></li>
+            </ul>
+        </div>
+        <div class="menu-column">
+            <h4>Bantuan & Layanan</h4>
+            <ul>
+                <li><a href="#">Cara Memesan</a></li>
+                <li><a href="#">Informasi Pengiriman</a></li>
+                <li><a href="#">Hubungi WhatsApp Toko</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Sidebar Keranjang -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <i class="fa-solid fa-xmark" id="cart-close"></i>
+        </div>
+        <div class="cart-body" id="cart-items-container">
+        </div>
+        <div class="cart-footer">
+            <div class="total-price">
+                <span>Total:</span>
+                <span id="cart-total">Rp 0</span>
+            </div>
+            <button class="btn-checkout" id="checkout-btn">Pesan Sekarang</button>
+        </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <h3>Toko Kue Tatang</h3>
+                <p>Menyediakan aneka kue berkualitas tinggi dengan resep legendaris yang selalu fresh.</p>
+            </div>
+            <div class="footer-hours">
+                <h4>Jam Operasional</h4>
+                <p>Setiap Hari: 07:00 - 21:00 WIB</p>
+            </div>
+            <div class="footer-socials">
+                <h4>Ikuti Kami</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Toko Kue Tatang. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
